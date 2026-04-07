@@ -54,13 +54,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("¡Tiempo terminado! Fin del juego.");
         }
         GameEvents.CambiarTiempo(tiempoRestante);
-            //----------test----------------
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            GameEvents.NuevoPedido(new[] { "Refresco", "Snack", "Agua" });
-        }
     }
-
 //--------------------Botones----------------------
     void onRecoger()
     {
