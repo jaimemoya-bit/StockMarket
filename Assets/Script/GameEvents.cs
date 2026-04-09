@@ -13,6 +13,7 @@ public static class GameEvents
     public static event Action<string[]> OnPedidoActualizado;
     public static event Action           OnRecoger;   
     public static event Action           OnCobrar;    
+    public static event Action<float>    OnFinTurno;
 
     public static void CambiarDinero(float v)
     {
@@ -47,5 +48,9 @@ public static class GameEvents
     public static void PulsarCobrar()
     {
         if (OnCobrar != null) OnCobrar();
+    }
+    public static void FinTurno(float dineroFinal)
+    {
+        if (OnFinTurno != null) OnFinTurno(dineroFinal);
     }
 }

@@ -16,8 +16,10 @@ public class GameManager : MonoBehaviour
     public int nivel;
     public float satisfaccion;
     public bool jugando;
+    private ProgresoApi _progresoApi;
     void Start()
     {
+        _progresoApi = GetComponent<ProgresoApi>();
         tiempoRestante = tiempototal;
         nivel = nivelInicial;
         jugando = true;
@@ -80,10 +82,36 @@ public class GameManager : MonoBehaviour
         GameEvents.CambiarSatisfaccion(satisfaccion);
     }
 
+    // --------------------Fin del turno----------------------
+    
+    void FindeTurno()
+    {
+        Debug.Log("¡Fin del turno! Dinero ganado: " + dinero);
+
+        //notifica HUD
+        GameEvents.FinTurno(dinero);
+        //guardar progreso en la API
+        StartCoroutine(_progresoApi.GuardarProgreso(dinero, 
+            onSuccess: () => Debug.Log("Progreso guardado exitosamente"),
+            onError: (error) => Debug.LogWarning("Error al guardar progreso: " + error)
+        ));
+    }
+    void GuardarRanking()
+    {
+        Debug.Log("Guardando ranking... Puntos: " + nivel);
+
+        //guardar ranking en la API
+        StartCoroutine(_progresoApi.GuardarRanking(nivel, 
+            onSuccess: () => Debug.Log("Ranking guardado exitosamente"),
+            onError: (error) => Debug.LogWarning("Error al guardar ranking: " + error)
+        ));
+    }
+    
     public void SubirNivel()
     {
         nivel++;
         GameEvents.CambiarNivel(nivel);
     }   
+
 
 }
