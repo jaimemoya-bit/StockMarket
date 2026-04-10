@@ -6,12 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/BoostTrap.unity
-    guid: 250b310b72e5f894d9a86ea61c49eaa3
-  - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: 2c193240f1c0f5d489b2e3cc5640c13c
-  - enabled: 1
-    path: Assets/Scenes/Level01.unity
-    guid: 5d3e3be5e3ada5b428bdc55745a4a532
-  m_configObjects: {}
+    path: Assets/Scenes/SampleScene.unity
+    guid: c850ee8c3b14cc8459e7e186857cf567
+  m_configObjects:
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: 9f15eb5d67209784092fdc096b4fa102, type: 2}
