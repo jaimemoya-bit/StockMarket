@@ -1,7 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,23 +42,32 @@ public class GameManager : MonoBehaviour
         GameEvents.OnCobrar -= onCobrar;
     }
     void Update()
-    {
-        if (!jugando) return;
+{
+    if (!jugando) return;
 
-        //actualizar el tiempo
-        tiempoRestante -= Time.deltaTime;
-        GameEvents.CambiarTiempo(tiempoRestante);
-        //fin del juego si el tiempo se acaba
-        if (tiempoRestante < 0)
-        {
-            tiempoRestante = 0;
-            jugando = false;
-            Debug.Log("¡Tiempo terminado! Fin del juego.");
-        }
-        GameEvents.CambiarTiempo(tiempoRestante);
+    tiempoRestante -= Time.deltaTime;
+    GameEvents.CambiarTiempo(tiempoRestante);
+
+    if (tiempoRestante < 0)
+    {
+        tiempoRestante = 0;
+        jugando = false;
+        Debug.Log("¡Tiempo terminado! Fin del juego.");
+        FindeTurno();   // ← aquí
     }
+
+    if (Input.GetKeyDown(KeyCode.R))
+    {
+        RankingAPI rankingAPI = GetComponent<RankingAPI>();
+        var datos = rankingAPI.GetTop10Falso();
+        foreach (var entry in datos)
+        {
+            Debug.Log(entry.rank + ". " + entry.userName + " → " + entry.score);
+        }
+    }
+}
 //--------------------Botones----------------------
-    void onRecoger()
+    public  void onRecoger()
     {
         Debug.Log("Recoger pedido");
         //aumentar  la satisfaccion al recoger un pedido
@@ -70,7 +79,7 @@ public class GameManager : MonoBehaviour
         GameEvents.CambiarSatisfaccion(satisfaccion);
     }
 
-    void onCobrar()
+    public void onCobrar()
     {
         Debug.Log("Cobrar pedido");
         //aumentar el dinero y la satisfaccion al cobrar un pedido
