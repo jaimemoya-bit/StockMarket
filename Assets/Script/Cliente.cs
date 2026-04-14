@@ -10,12 +10,15 @@ public class Cliente : MonoBehaviour
     //Variable de tipo GameManager para poder llamar al metodo AnadirSatis()
     private GameManager gameManager;
 
+    //Para poder llamar al gestor de cola ColaManager
+    [SerializeField] private ColaManager colaManager;
+
     //Variable para medir la satisfaccion del cliente
-    private int clientSatis;
+    public int clientSatis;
     private int maxSatis = 10;
 
     //Variable para el intervalo de tiempo en el que pierde cada punto
-    private float intervalPerd = 1f;
+    private float intervalPerd = 2f;
 
     //Variable para indicar que el cliente está en la caja
     //(De momento hardcodeado en true)
@@ -26,7 +29,7 @@ public class Cliente : MonoBehaviour
 
     //Elemento de Interfaz indicando satisfaccion
     //De momento se asigna mediante editor
-    public TextMeshProUGUI clientSatisText;
+    [SerializeField] private TextMeshProUGUI clientSatisText;
 
     //Punto de destino del cliente (caja)
     //Se asigna en editor
@@ -35,6 +38,11 @@ public class Cliente : MonoBehaviour
     //Punto de destino para cuando se marcha (Puerta)
     //Se asigna en editor
     [SerializeField] private Transform puertaTrigger;
+
+    //Array de posiciones para las estanterias(gameObjects vacios)
+    //Se asigna en editor
+    [SerializeField] private Transform[] estantTrigger;
+
 
     //Booleano para saber si está de camino a caja
     private bool caminoACaja;
@@ -58,9 +66,10 @@ public class Cliente : MonoBehaviour
         clientSatis = maxSatis;
         //Asignamos el objeto GameManager
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        
-        // Cuando el NPC aparece, automáticamente va a la caja
-        MoverseACaja();
+
+        // Cuando el NPC aparece, automáticamente va a la caja (temporal)
+        // Se añade el cliente al sistema de cola del ColaManager
+        colaManager.ACola(this);
 
 
     }
@@ -78,7 +87,7 @@ public class Cliente : MonoBehaviour
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             // Si ya no tiene path o está parado completamente y está de camino a caja, no yendose
-            if (!agent.hasPath && caminoACaja && !irseDeTienda || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
+            if (!agent.hasPath && caminoACaja && !irseDeTienda && colaManager.EsPrimero(this) || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
             {
                 // El cliente llegó a la caja
                 LLegadaACaja();
@@ -92,14 +101,16 @@ public class Cliente : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-        }
+        }        
+      
+
     }
 
     //Cuenta atras, el cliente pierde satisfaccion segun pasa el tiempo
     IEnumerator PerdidaSatis()
     {
         //Asignamos interfaz
-        clientSatisText.text = "Satisfacción Cliente: " + clientSatis;
+        clientSatisText.text = "" + clientSatis;
         //Activamos elemento de interfaz
         clientSatisText.gameObject.SetActive(true);
 
@@ -112,7 +123,7 @@ public class Cliente : MonoBehaviour
             // evitar negativos
             clientSatis = Mathf.Clamp(clientSatis, 0, maxSatis);
             //Actualiza la interfaz
-            clientSatisText.text = "Satisfacción Cliente: " + clientSatis;
+            clientSatisText.text = ""+ clientSatis;
 
         }
         Debug.Log("Llegó a 0");
@@ -137,12 +148,16 @@ public class Cliente : MonoBehaviour
     }
 
     // Función pública para enviar el cliente a la caja
-    public void MoverseACaja()
+    public void MoverseACaja(Transform posicion)
     {
+        agent.isStopped = false;
         caminoACaja = true;
         // Setea el destino del pathfinding
         // El NavMeshAgent calcula automáticamente la ruta
-        agent.SetDestination(cajaTrigger.position);
+        
+            agent.SetDestination(posicion.position);
+        Debug.Log("Cliente se mueven a caja");
+
     }
 
     // Función cuando el cliente llega a la caja
@@ -151,7 +166,6 @@ public class Cliente : MonoBehaviour
         // Evita que se siga llamando cada frame
         agent.isStopped = true;
         enCaja = true;
-        caminoACaja = false;
 
         Debug.Log("Cliente llegó a la caja");
 
@@ -159,13 +173,22 @@ public class Cliente : MonoBehaviour
         StartCoroutine(PerdidaSatis());
     }
 
-    // Función pública para que el cliente se marche de la tienda
+    // Funcion publica para que el cliente se marche de la tienda
     public void Marcharse()
     {
+        caminoACaja = false;
         agent.isStopped = false;
         enCaja = false;
         agent.SetDestination(puertaTrigger.position);
         irseDeTienda = true;
         Debug.Log("El cliente se macrha");
+        colaManager.SalirCola(this);
+    }
+
+    //Metodo para asignar el sistema de cola al cliente
+    //Para referenciar metodos del ColaManager
+    public void SetQueue(ColaManager queue)
+    {
+        colaManager = queue;
     }
 }
