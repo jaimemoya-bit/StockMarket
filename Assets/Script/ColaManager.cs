@@ -62,4 +62,10 @@ public class ColaManager : MonoBehaviour
         // si hay más clientes que puntos disponibles
         return clientes.Count >= posisCola.Length;
     }
+
+    //Contar los clientes en cola
+    public int ConteoCola()
+    {
+        return clientes.Count;
+    }
 }

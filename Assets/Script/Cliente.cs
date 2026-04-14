@@ -11,7 +11,7 @@ public class Cliente : MonoBehaviour
     private GameManager gameManager;
 
     //Para poder llamar al gestor de cola ColaManager
-    [SerializeField] private ColaManager colaManager;
+    [SerializeField] private ColaManager cola;
 
     //Variable para medir la satisfaccion del cliente
     public int clientSatis;
@@ -30,10 +30,6 @@ public class Cliente : MonoBehaviour
     //Elemento de Interfaz indicando satisfaccion
     //De momento se asigna mediante editor
     [SerializeField] private TextMeshProUGUI clientSatisText;
-
-    //Punto de destino del cliente (caja)
-    //Se asigna en editor
-    [SerializeField] private Transform cajaTrigger;
 
     //Punto de destino para cuando se marcha (Puerta)
     //Se asigna en editor
@@ -62,14 +58,18 @@ public class Cliente : MonoBehaviour
     {
         enCaja = false;
         irseDeTienda = false;
-        //El cliente comienza con 10 puntos de satisfaccion
-        clientSatis = maxSatis;
+
         //Asignamos el objeto GameManager
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        //Se asigna la cola con menos clientes
+        cola = AsignarCola();
+        //El cliente comienza con 10 puntos de satisfaccion
+        clientSatis = maxSatis;
+        
 
         // Cuando el NPC aparece, automáticamente va a la caja (temporal)
         // Se añade el cliente al sistema de cola del ColaManager
-        colaManager.ACola(this);
+        cola.ACola(this);
 
 
     }
@@ -87,7 +87,7 @@ public class Cliente : MonoBehaviour
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             // Si ya no tiene path o está parado completamente y está de camino a caja, no yendose
-            if (!agent.hasPath && caminoACaja && !irseDeTienda && colaManager.EsPrimero(this) || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
+            if (!agent.hasPath && caminoACaja && !irseDeTienda && cola.EsPrimero(this) || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
             {
                 // El cliente llegó a la caja
                 LLegadaACaja();
@@ -147,6 +147,8 @@ public class Cliente : MonoBehaviour
         StartCoroutine(PerdidaSatis());
     }
 
+    
+
     // Función pública para enviar el cliente a la caja
     public void MoverseACaja(Transform posicion)
     {
@@ -182,13 +184,26 @@ public class Cliente : MonoBehaviour
         agent.SetDestination(puertaTrigger.position);
         irseDeTienda = true;
         Debug.Log("El cliente se macrha");
-        colaManager.SalirCola(this);
+        cola.SalirCola(this);
     }
 
-    //Metodo para asignar el sistema de cola al cliente
+    //Metodo para asignar cola al cliente
     //Para referenciar metodos del ColaManager
-    public void SetQueue(ColaManager queue)
+    ColaManager AsignarCola()
     {
-        colaManager = queue;
+        ColaManager[] colas = FindObjectsOfType<ColaManager>();
+
+        ColaManager best = colas[0];
+        int min = best.ConteoCola();
+
+        foreach (var c in colas)
+        {
+            if( c.ConteoCola() < min)
+            {
+                best = c;
+                min = c.ConteoCola();
+            }
+        }
+        return best;
     }
 }
