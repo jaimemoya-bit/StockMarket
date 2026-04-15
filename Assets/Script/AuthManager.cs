@@ -70,6 +70,14 @@ public class AuthManager : MonoBehaviour
             }
         }
     }
+    //------cerrar sesion------
+    public static void CerrarSesion()
+    {
+        Token = null;
+        UserId = 0;
+        UserName = null;
+    }
+
     //---Clases para parsear el json de respuesta del login---
     [System.Serializable]   
     private class LoginResponse

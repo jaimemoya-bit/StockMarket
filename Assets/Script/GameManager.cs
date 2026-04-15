@@ -1,15 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RankingAPI))]
+[RequireComponent(typeof(ProgresoApi))]
 public class GameManager : MonoBehaviour
 {
-    //Configuracion del juego, variables globales
     [Header("Configuracion")]
-    public float tiempototal=120f;
-    public int nivelInicial=1;
-
+    public float tiempototal = 120f;
+    public int nivelInicial = 1;
 
     public float dinero;
     public float tiempoRestante;
@@ -17,110 +14,99 @@ public class GameManager : MonoBehaviour
     public float satisfaccion;
     public bool jugando;
     private ProgresoApi _progresoApi;
+
     void Start()
     {
-        _progresoApi = GetComponent<ProgresoApi>();
-        tiempoRestante = tiempototal;
-        nivel = nivelInicial;
-        jugando = true;
-        dinero = 0f;
-        satisfaccion = 1f;
-        //suscribirse a eventos
-        GameEvents.OnRecoger += onRecoger;
-        GameEvents.OnCobrar += onCobrar;
+        jugando = false;
 
-        // lanzar el evento al inicio
+        _progresoApi = GetComponent<ProgresoApi>();
+        GameEvents.OnIniciarJuego += IniciarJuego;
+        GameEvents.OnRecoger      += OnRecoger;
+        GameEvents.OnCobrar       += OnCobrar;
+
+        // Solo inicializa valores para el HUD, no arranca el timer
+        tiempoRestante = tiempototal;
+        dinero         = 0f;
+        satisfaccion   = 1f;
+        nivel          = nivelInicial;
+        BroadcastEstado();
+        GameEvents.AbrirMenu();
+    }
+
+    void OnDestroy()
+    {
+        GameEvents.OnIniciarJuego -= IniciarJuego;
+        GameEvents.OnRecoger      -= OnRecoger;
+        GameEvents.OnCobrar       -= OnCobrar;
+    }
+
+    void Update()
+    {
+        if (!jugando) return;
+
+        tiempoRestante = Mathf.Max(0, tiempoRestante - Time.deltaTime);
+        GameEvents.CambiarTiempo(tiempoRestante);
+
+        if (tiempoRestante == 0) { jugando = false; FindeTurno(); }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            foreach (var e in GetComponent<RankingAPI>().GetTop10Falso())
+                Debug.Log($"{e.rank}. {e.userName} → {e.score}");
+    }
+
+    // Emite todos los valores al HUD de una vez
+    void BroadcastEstado()
+    {
         GameEvents.CambiarDinero(dinero);
         GameEvents.CambiarTiempo(tiempoRestante);
         GameEvents.CambiarNivel(nivel);
         GameEvents.CambiarSatisfaccion(satisfaccion);
     }
-    void OnDestroy()
-    {
-        //desuscribirse de eventos
-        GameEvents.OnRecoger -= onRecoger;
-        GameEvents.OnCobrar -= onCobrar;
-    }
-    void Update()
-{
-    if (!jugando) return;
 
-    tiempoRestante -= Time.deltaTime;
-    GameEvents.CambiarTiempo(tiempoRestante);
-
-    if (tiempoRestante < 0)
+    // Suma satisfacción, la clampea y notifica
+    void AgregarSatisfaccion(float delta)
     {
-        tiempoRestante = 0;
-        jugando = false;
-        Debug.Log("¡Tiempo terminado! Fin del juego.");
-        FindeTurno();   // ← aquí
-    }
-
-    if (Input.GetKeyDown(KeyCode.R))
-    {
-        RankingAPI rankingAPI = GetComponent<RankingAPI>();
-        var datos = rankingAPI.GetTop10Falso();
-        foreach (var entry in datos)
-        {
-            Debug.Log(entry.rank + ". " + entry.userName + " → " + entry.score);
-        }
-    }
-}
-//--------------------Botones----------------------
-    public  void onRecoger()
-    {
-        Debug.Log("Recoger pedido");
-        //aumentar  la satisfaccion al recoger un pedido
-        
-        satisfaccion += 0.1f;
-        if (satisfaccion > 1f) satisfaccion = 1f;
-
+        satisfaccion = Mathf.Clamp01(satisfaccion + delta);
         GameEvents.CambiarDinero(dinero);
         GameEvents.CambiarSatisfaccion(satisfaccion);
     }
 
-    public void onCobrar()
+    void IniciarJuego()
     {
-        Debug.Log("Cobrar pedido");
-        //aumentar el dinero y la satisfaccion al cobrar un pedido
+        jugando        = true;
+        tiempoRestante = tiempototal;
+        dinero         = 0f;
+        satisfaccion   = 1f;
+        nivel          = nivelInicial;
+        BroadcastEstado();
+    }
+
+    public void OnRecoger() => AgregarSatisfaccion(0.1f);
+
+    public void OnCobrar()
+    {
         dinero += 150f;
-        satisfaccion += 0.05f;
-        if (satisfaccion > 1f) satisfaccion = 1f;
-
-        GameEvents.CambiarDinero(dinero);
-        GameEvents.CambiarSatisfaccion(satisfaccion);
+        AgregarSatisfaccion(0.05f);
     }
 
-    // --------------------Fin del turno----------------------
-    
     void FindeTurno()
     {
-        Debug.Log("¡Fin del turno! Dinero ganado: " + dinero);
-
-        //notifica HUD
         GameEvents.FinTurno(dinero);
-        //guardar progreso en la API
-        StartCoroutine(_progresoApi.GuardarProgreso(dinero, 
-            onSuccess: () => Debug.Log("Progreso guardado exitosamente"),
-            onError: (error) => Debug.LogWarning("Error al guardar progreso: " + error)
+        StartCoroutine(_progresoApi.GuardarProgreso(dinero,
+            onSuccess: () => Debug.Log("Progreso guardado"),
+            onError:   (e) => Debug.LogWarning("Error al guardar: " + e)
         ));
     }
-    void GuardarRanking()
-    {
-        Debug.Log("Guardando ranking... Puntos: " + nivel);
 
-        //guardar ranking en la API
-        StartCoroutine(_progresoApi.GuardarRanking(nivel, 
-            onSuccess: () => Debug.Log("Ranking guardado exitosamente"),
-            onError: (error) => Debug.LogWarning("Error al guardar ranking: " + error)
+    void GuardarRanking() =>
+        StartCoroutine(_progresoApi.GuardarRanking(nivel,
+            onSuccess: () => Debug.Log("Ranking guardado"),
+            onError:   (e) => Debug.LogWarning("Error ranking: " + e)
         ));
-    }
-    
+
     public void SubirNivel()
     {
         nivel++;
         GameEvents.CambiarNivel(nivel);
-    }   
-
-
+    }
 }
