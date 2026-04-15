@@ -11,7 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 7e4c2cde4f76e694fa5df7938abdf4d4
-  - enabled: 1
-    path: Assets/Scenes/RankingScene.unity
-    guid: f904819d3a5a2d14f9eeb1f280d2c41e
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: d45c4ecbc86fe504283f7c72f427e698, type: 2}

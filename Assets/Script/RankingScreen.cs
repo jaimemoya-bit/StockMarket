@@ -6,15 +6,22 @@ public class RankingScreen : MonoBehaviour
 {
     public Transform   contenedor;     // Contenedor_Ranking
     public GameObject  filaPrefab;     // prefab FilaRanking
-
+    public GameObject  panelFinTurno;   // Panel_FinTurno
+    public GameObject  panelRanking;    // Panel_Ranking
     private RankingAPI _rankingAPI;
 
     void Start()
     {
+       
+    }
+
+    public void AbrirRanking()
+    {
+        panelFinTurno.SetActive(false);
+        panelRanking.SetActive(true);
         _rankingAPI = FindObjectOfType<RankingAPI>();
         CargarRanking();
     }
-
     void CargarRanking()
     {
         // Limpia filas anteriores
@@ -48,6 +55,7 @@ public class RankingScreen : MonoBehaviour
 
     public void OnClickVolver()
     {
-        SceneManager.LoadScene("LoginScene");
+        panelRanking.SetActive(false);
+        panelFinTurno.SetActive(true);
     }
 }

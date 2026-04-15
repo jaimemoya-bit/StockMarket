@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 
 public class FindeTurnoPanel : MonoBehaviour
@@ -14,6 +15,7 @@ public class FindeTurnoPanel : MonoBehaviour
     public TextMeshProUGUI TxtSatisfaccion;
     public TextMeshProUGUI TxtEstado;
     public GameObject PanelFinTurno;
+    public RankingScreen PanelRanking;
 
     void Start()
     {
@@ -30,10 +32,10 @@ public class FindeTurnoPanel : MonoBehaviour
     {
         PanelFinTurno.SetActive(true);
         //Actualizar el panel con la información del juego
-        Txtdinero.text = "💰 Dinero: $" + dinero.ToString("N0");
-        TxtSatisfaccion.text = "😊 Satisfacción: " +
+        Txtdinero.text = "Dinero: $" + dinero.ToString("N0");
+        TxtSatisfaccion.text = "Satisfacción: " +
                                Mathf.RoundToInt(dinero / 50f) + "%";
-        Txtnivel.text = "⭐ Nivel: " + PlayerPrefs.GetInt("Nivel", 1);
+        Txtnivel.text = "Nivel: " + PlayerPrefs.GetInt("Nivel", 1);
         TxtEstado.text = "Guardando progreso...";
         //Cambiar estado cuando guarde
         StartCoroutine(Esperandoguardado());
@@ -47,7 +49,8 @@ public class FindeTurnoPanel : MonoBehaviour
     public void OnClickVerRanking()
     {
         //Mostrar el ranking
-        SceneManager.LoadScene("RankingScene");
+        PanelRanking.AbrirRanking();
+            
     }
     public void OnClickJugarDeNuevo()
     {
