@@ -4,9 +4,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 public class Cliente : MonoBehaviour
 {
+    public mirarcaja mirar;
     //Variable de tipo GameManager para poder llamar al metodo AnadirSatis()
     private GameManager gameManager;
 
@@ -20,7 +22,7 @@ public class Cliente : MonoBehaviour
     //Variable para el intervalo de tiempo en el que pierde cada punto
     private float intervalPerd = 2f;
 
-    //Variable para indicar que el cliente está en la caja
+    //Variable para indicar que el cliente estï¿½ en la caja
     //(De momento hardcodeado en true)
     private bool enCaja;
 
@@ -40,7 +42,7 @@ public class Cliente : MonoBehaviour
     [SerializeField] private Transform[] estantTrigger;
 
 
-    //Booleano para saber si está de camino a caja
+    //Booleano para saber si estï¿½ de camino a caja
     private bool caminoACaja;
 
     //NavMeshAgent del cliente
@@ -67,8 +69,8 @@ public class Cliente : MonoBehaviour
         clientSatis = maxSatis;
         
 
-        // Cuando el NPC aparece, automáticamente va a la caja (temporal)
-        // Se añade el cliente al sistema de cola del ColaManager
+        // Cuando el NPC aparece, automï¿½ticamente va a la caja (temporal)
+        // Se aï¿½ade el cliente al sistema de cola del ColaManager
         cola.ACola(this);
 
 
@@ -80,21 +82,21 @@ public class Cliente : MonoBehaviour
         // si ya esta en caja no seguir comprobando
         if (enCaja) return;
 
-        // Si aún está calculando el path no hacemos nada
+        // Si aï¿½n estï¿½ calculando el path no hacemos nada
         if (agent.pathPending) return;
 
         // Si la distancia restante es menor que la distancia de parada
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            // Si ya no tiene path o está parado completamente y está de camino a caja, no yendose
+            // Si ya no tiene path o estï¿½ parado completamente y estï¿½ de camino a caja, no yendose
             if (!agent.hasPath && caminoACaja && !irseDeTienda && cola.EsPrimero(this) || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
             {
-                // El cliente llegó a la caja
+                // El cliente llegï¿½ a la caja
                 LLegadaACaja();
                 
             }
 
-            /*Si no está de camino a caja y esta de camino a marcharse
+            /*Si no estï¿½ de camino a caja y esta de camino a marcharse
              * el cliente se destruye al marcharse de la tienda
              */
             if (!agent.hasPath && irseDeTienda && !caminoACaja || agent.velocity.sqrMagnitude == 0f && irseDeTienda && !caminoACaja)
@@ -126,13 +128,13 @@ public class Cliente : MonoBehaviour
             clientSatisText.text = ""+ clientSatis;
 
         }
-        Debug.Log("Llegó a 0");
+        Debug.Log("Llegï¿½ a 0");
         Marcharse();
 
     }
 
     /*
-     * On Click (Placeholder) se añade la satisfacción del cliente a la 
+     * On Click (Placeholder) se aï¿½ade la satisfacciï¿½n del cliente a la 
      * general
      */
     private void OnMouseDown()
@@ -149,27 +151,28 @@ public class Cliente : MonoBehaviour
 
     
 
-    // Función pública para enviar el cliente a la caja
+    // Funciï¿½n pï¿½blica para enviar el cliente a la caja
     public void MoverseACaja(Transform posicion)
     {
         agent.isStopped = false;
         caminoACaja = true;
         // Setea el destino del pathfinding
-        // El NavMeshAgent calcula automáticamente la ruta
+        // El NavMeshAgent calcula automï¿½ticamente la ruta
         
             agent.SetDestination(posicion.position);
         Debug.Log("Cliente se mueven a caja");
 
     }
 
-    // Función cuando el cliente llega a la caja
+    // Funciï¿½n cuando el cliente llega a la caja
     void LLegadaACaja()
     {
         // Evita que se siga llamando cada frame
         agent.isStopped = true;
         enCaja = true;
-
-        Debug.Log("Cliente llegó a la caja");
+        mirar.enabled=true;
+        
+        Debug.Log("Cliente llegï¿½ a la caja");
 
         //Iniciamos la perdida de satisfaccion
         StartCoroutine(PerdidaSatis());
