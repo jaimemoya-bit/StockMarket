@@ -202,6 +202,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Caja (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4401842297871787844, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
+      propertyPath: m_TagString
+      value: caja
+      objectReference: {fileID: 0}
     - target: {fileID: 4963477630357963757, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.14
@@ -410,6 +414,10 @@ PrefabInstance:
     - target: {fileID: 4401842297871787844, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
       propertyPath: m_Name
       value: Caja (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401842297871787844, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
+      propertyPath: m_TagString
+      value: caja
       objectReference: {fileID: 0}
     - target: {fileID: 4963477630357963757, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -649,7 +657,7 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.05
+    m_Bias: 0.07
     m_NormalBias: 0.4
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
@@ -1255,6 +1263,10 @@ PrefabInstance:
     - target: {fileID: 4401842297871787844, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
       propertyPath: m_Name
       value: Caja
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401842297871787844, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
+      propertyPath: m_TagString
+      value: caja
       objectReference: {fileID: 0}
     - target: {fileID: 4963477630357963757, guid: 50dfc70fc391c584d8ef93a6a4ef8e4e, type: 3}
       propertyPath: m_LocalPosition.x

@@ -24,7 +24,7 @@ public class Cliente : MonoBehaviour
 
     //Variable para indicar que el cliente est� en la caja
     //(De momento hardcodeado en true)
-    private bool enCaja;
+    public bool enCaja;
 
     //Booleano para indicar que el cliente se esta marchando;
     private bool irseDeTienda;

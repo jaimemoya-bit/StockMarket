@@ -13,7 +13,7 @@ public class mirarcaja : MonoBehaviour
     {
         if (!yaGiro)
     {
-        transform.Rotate(0, 60, 0);
+        transform.Rotate(0, 90, 0);
         yaGiro = true;
     }
     }
