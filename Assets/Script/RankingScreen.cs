@@ -6,19 +6,12 @@ public class RankingScreen : MonoBehaviour
 {
     public Transform   contenedor;     // Contenedor_Ranking
     public GameObject  filaPrefab;     // prefab FilaRanking
-    public GameObject  panelFinTurno;   // Panel_FinTurno
-    public GameObject  panelRanking;    // Panel_Ranking
     private RankingAPI _rankingAPI;
+
+    public static string escenaRetorno = "MenuScene"; // Escena a la que volverá al pulsar "Volver"
 
     void Start()
     {
-       
-    }
-
-    public void AbrirRanking()
-    {
-        panelFinTurno.SetActive(false);
-        panelRanking.SetActive(true);
         _rankingAPI = FindObjectOfType<RankingAPI>();
         CargarRanking();
     }
@@ -28,8 +21,13 @@ public class RankingScreen : MonoBehaviour
         foreach (Transform h in contenedor)
             Destroy(h.gameObject);
 
-        // Intenta cargar desde servidor
-        // Si falla usa datos falsos
+        if (_rankingAPI == null)
+        {
+            Debug.LogWarning("RankingAPI no encontrada — usando datos de prueba");
+            MostrarLista(RankingAPI.GetTop10Falso());
+            return;
+        }
+
         StartCoroutine(_rankingAPI.GetTop10(
             onOk: (lista) =>
             {
@@ -38,7 +36,7 @@ public class RankingScreen : MonoBehaviour
             onError: (msg) =>
             {
                 Debug.LogWarning(msg + " — usando datos de prueba");
-                MostrarLista(_rankingAPI.GetTop10Falso());
+                MostrarLista(RankingAPI.GetTop10Falso());
             }
         ));
     }
@@ -55,7 +53,7 @@ public class RankingScreen : MonoBehaviour
 
     public void OnClickVolver()
     {
-        panelRanking.SetActive(false);
-        panelFinTurno.SetActive(true);
+        Debug.Log("OnClickVolver llamado — escenaRetorno: " + escenaRetorno);
+        SceneManager.LoadScene(escenaRetorno);
     }
 }

@@ -9,7 +9,8 @@ public class MenuPanel : MonoBehaviour
     public TextMeshProUGUI TxtTitulo;
     public GameObject PanelMenu;
     public GameObject PanelInstrucciones;
-    public GameObject Panelranking;
+    public GameObject CreditosPanel;
+    
     void Start()
     { //mostrar nombre dl Jugador
         if(!string.IsNullOrEmpty(AuthManager.UserName))
@@ -22,22 +23,19 @@ public class MenuPanel : MonoBehaviour
     //Boton para iniciar el juego
     public void OnClickJugar()
     {
-        PanelMenu.SetActive(false);
-        GameEvents.IniciarJuego();
+        SceneManager.LoadScene("GameScene");
     }
     //panel de intrucciones
     public void OnClickInstrucciones()
     {
         PanelInstrucciones.SetActive(true);
         PanelMenu.SetActive(false);
-        Panelranking.SetActive(false);
+       
     }
     public void OnClickRanking()
     {
-        Panelranking.SetActive(true);
-        PanelMenu.SetActive(false);
-        PanelInstrucciones.SetActive(false);
-
+        RankingScreen.escenaRetorno = "MenuScene";
+        SceneManager.LoadScene("RankingScene");
     }
     public void OnClickcerrarSession()
     {
@@ -52,16 +50,21 @@ public class MenuPanel : MonoBehaviour
     {
         GameEvents.OnAbrirMenu -= MostrarMenu;
     }
-    void MostrarMenu()
+    public void MostrarMenu()
 
     {
         PanelMenu.SetActive(true);
         PanelInstrucciones.SetActive(false);
-        Panelranking.SetActive(false);
+            CreditosPanel.SetActive(false);
+
     }
     public void OnclickEmpezar()
     {
+        SceneManager.LoadScene("GameScene");
+    }
+    public void OnClickCreditos()
+    {
+        CreditosPanel.SetActive(true);
         PanelMenu.SetActive(false);
-        GameEvents.IniciarJuego();
     }
 }

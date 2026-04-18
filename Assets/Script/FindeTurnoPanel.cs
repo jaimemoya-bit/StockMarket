@@ -15,12 +15,25 @@ public class FindeTurnoPanel : MonoBehaviour
     public TextMeshProUGUI TxtSatisfaccion;
     public TextMeshProUGUI TxtEstado;
     public GameObject PanelFinTurno;
-    public RankingScreen PanelRanking;
+
+
+    // Bandera para reabrir el panel al volver del Ranking
+    public static bool volverDeRanking = false;
+    private static float ultimoDinero = 0f;
 
     void Start()
     {
-        PanelFinTurno.SetActive(false);
         GameEvents.OnFinTurno += UpdatePanel;
+
+        if (volverDeRanking)
+        {
+            volverDeRanking = false;
+            UpdatePanel(ultimoDinero);
+        }
+        else
+        {
+            PanelFinTurno.SetActive(false);
+        }
     }
 
     void OnDisable()
@@ -30,10 +43,11 @@ public class FindeTurnoPanel : MonoBehaviour
 
     void UpdatePanel(float dinero)
     {
+        ultimoDinero = dinero;
         PanelFinTurno.SetActive(true);
         //Actualizar el panel con la información del juego
         Txtdinero.text = "Dinero: $" + dinero.ToString("N0");
-        TxtSatisfaccion.text = "Satisfacción: " +
+        TxtSatisfaccion.text = "Satisfaccion: " +
                                Mathf.RoundToInt(dinero / 50f) + "%";
         Txtnivel.text = "Nivel: " + PlayerPrefs.GetInt("Nivel", 1);
         TxtEstado.text = "Guardando progreso...";
@@ -48,13 +62,18 @@ public class FindeTurnoPanel : MonoBehaviour
     }
     public void OnClickVerRanking()
     {
-        //Mostrar el ranking
-        PanelRanking.AbrirRanking();
-            
+        volverDeRanking = true;
+        RankingScreen.escenaRetorno = "GameScene";
+        SceneManager.LoadScene("RankingScene");
     }
     public void OnClickJugarDeNuevo()
     {
         //Reiniciar el juego
         SceneManager.LoadScene("GameScene");
+    }
+    public void OnClickMenuPrincipal()
+    {
+        //Volver al menu principal
+        SceneManager.LoadScene("MenuScene");
     }
 }

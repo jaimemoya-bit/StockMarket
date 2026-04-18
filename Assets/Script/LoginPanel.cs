@@ -58,7 +58,7 @@ public class LoginPanel : MonoBehaviour
             onSucess: (message) =>
             {
                 Debug.Log("Login OK. Usuario: " + AuthManager.UserName);
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
             },
             onError: (msg) =>
             {

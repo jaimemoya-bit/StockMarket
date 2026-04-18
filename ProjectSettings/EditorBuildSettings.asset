@@ -9,7 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/LoginScene.unity
     guid: 4924b476deaa97f4287ff173919aca20
   - enabled: 1
+    path: Assets/Scenes/MenuScene.unity
+    guid: 3233dd0b4a3ffd24bb02f414d90edcdc
+  - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: 7e4c2cde4f76e694fa5df7938abdf4d4
+  - enabled: 1
+    path: Assets/Scenes/RankingScene.unity
+    guid: 2f02cc95cb762c04bbe612efcbcc3002
   m_configObjects:
-    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: d45c4ecbc86fe504283f7c72f427e698, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 9cd77adb82d20114181fe877102af7d3, type: 2}

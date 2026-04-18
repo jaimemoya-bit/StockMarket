@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         satisfaccion   = 1f;
         nivel          = nivelInicial;
         BroadcastEstado();
-        GameEvents.AbrirMenu();
+        IniciarJuego();
     }
 
     void OnDestroy()
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         if (tiempoRestante == 0) { jugando = false; FindeTurno(); }
 
         if (Input.GetKeyDown(KeyCode.R))
-            foreach (var e in GetComponent<RankingAPI>().GetTop10Falso())
+            foreach (var e in RankingAPI.GetTop10Falso())
                 Debug.Log($"{e.rank}. {e.userName} → {e.score}");
     }
 

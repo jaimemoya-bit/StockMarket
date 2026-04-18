@@ -11,7 +11,7 @@ public class RankingAPI : MonoBehaviour
  public IEnumerator GetTop10(System.Action<List<RankingData>> onOk,
                                 System.Action<string> onError)
     {
-        using (UnityWebRequest req = UnityWebRequest.Get(URL_BASE + "/ranking"))
+        using (UnityWebRequest req = UnityWebRequest.Get(URL_BASE))
         {
             req.SetRequestHeader("Content-Type", "application/json");
 
@@ -41,7 +41,7 @@ public class RankingAPI : MonoBehaviour
         }
     }
     // TEST — devuelve datos falsos sin necesitar servidor
-     public List<RankingData> GetTop10Falso()
+     public static List<RankingData> GetTop10Falso()
     {
         return new List<RankingData>
         {
