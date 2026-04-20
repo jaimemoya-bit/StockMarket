@@ -11,12 +11,20 @@ public class BotonoesPanel : MonoBehaviour
     {
         btnRecoger.onClick.AddListener(OnRecoger);
         btnCobrar.onClick.AddListener(OnCobrar);
+        GameEvents.OnFinTurno += OnFinTurno;
     }
 
     void OnDestroy()
     {
         btnRecoger.onClick.RemoveListener(OnRecoger);
         btnCobrar.onClick.RemoveListener(OnCobrar);
+        GameEvents.OnFinTurno -= OnFinTurno;
+    }
+
+    void OnFinTurno(float dineroFinal)
+    {
+        btnRecoger.interactable = false;
+        btnCobrar.interactable = false;
     }
 
     void OnRecoger()

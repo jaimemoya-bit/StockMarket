@@ -16,6 +16,8 @@ public static class GameEvents
     public static event Action<float>    OnFinTurno;
     public static event Action           OnAbrirMenu;
     public static event Action          OnIniciarJuego;
+    public static event Action<bool>    OnPausa;
+    private static bool _pausa = false;
 
     public static void CambiarDinero(float v)
     {
@@ -62,5 +64,11 @@ public static class GameEvents
     public static void IniciarJuego()
     {
         OnIniciarJuego?.Invoke();
+    }
+    public static void Pausar()
+    {
+        _pausa = !_pausa;
+        Debug.Log("GameEvents: Pausar llamado, nueva pausa=" + _pausa+OnPausa?.GetInvocationList().Length);
+        if (OnPausa != null) OnPausa(_pausa);
     }
 }
