@@ -18,6 +18,7 @@
 *.booproj
 *.svclog
 *.com.apple.itunes.stored
+*.log
 
 # OS x
 .DS_Store
