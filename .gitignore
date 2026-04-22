@@ -18,11 +18,8 @@
 *.booproj
 *.svclog
 *.com.apple.itunes.stored
+*.log
 
 # OS x
 .DS_Store
 DerivedData/
-Logs/AssetImportWorker0.log
-Logs/AssetImportWorker1.log
-Logs/shadercompiler-AssetImportWorker0.log
-Logs/shadercompiler-UnityShaderCompiler.exe0.log
