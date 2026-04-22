@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Proyectos\\Unity\\GITHUB\\StockMarket\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C66AD043-D91D-B79B-2C30-EC5A76E3EA37}|Assembly-CSharp.csproj|c:\\proyectos\\unity\\github\\stockmarket\\assets\\scripts\\playerinteraction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C66AD043-D91D-B79B-2C30-EC5A76E3EA37}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\playerinteraction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PlayerInteraction.cs",
+              "DocumentMoniker": "C:\\Proyectos\\Unity\\GITHUB\\StockMarket\\Assets\\Scripts\\PlayerInteraction.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PlayerInteraction.cs",
+              "ToolTip": "C:\\Proyectos\\Unity\\GITHUB\\StockMarket\\Assets\\Scripts\\PlayerInteraction.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PlayerInteraction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T14:45:14.728Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
