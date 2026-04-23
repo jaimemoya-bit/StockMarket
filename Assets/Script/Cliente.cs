@@ -1,0 +1,171 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using UnityEngine.AI;
+
+public class Cliente : MonoBehaviour
+{
+    //Variable de tipo GameManager para poder llamar al metodo AnadirSatis()
+    private GameManager gameManager;
+
+    //Variable para medir la satisfaccion del cliente
+    private int clientSatis;
+    private int maxSatis = 10;
+
+    //Variable para el intervalo de tiempo en el que pierde cada punto
+    private float intervalPerd = 1f;
+
+    //Variable para indicar que el cliente está en la caja
+    //(De momento hardcodeado en true)
+    private bool enCaja;
+
+    //Booleano para indicar que el cliente se esta marchando;
+    private bool irseDeTienda;
+
+    //Elemento de Interfaz indicando satisfaccion
+    //De momento se asigna mediante editor
+    public TextMeshProUGUI clientSatisText;
+
+    //Punto de destino del cliente (caja)
+    //Se asigna en editor
+    [SerializeField] private Transform cajaTrigger;
+
+    //Punto de destino para cuando se marcha (Puerta)
+    //Se asigna en editor
+    [SerializeField] private Transform puertaTrigger;
+
+    //Booleano para saber si está de camino a caja
+    private bool caminoACaja;
+
+    //NavMeshAgent del cliente
+    private NavMeshAgent agent;
+
+    //Awake se llama antes de que empiece el juego
+    void Awake()
+    {
+        // Obtiene el componente NavMeshAgent GameObject cliente
+        agent = GetComponent<NavMeshAgent>();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        enCaja = false;
+        irseDeTienda = false;
+        //El cliente comienza con 10 puntos de satisfaccion
+        clientSatis = maxSatis;
+        //Asignamos el objeto GameManager
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        
+        // Cuando el NPC aparece, automáticamente va a la caja
+        MoverseACaja();
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // si ya esta en caja no seguir comprobando
+        if (enCaja) return;
+
+        // Si aún está calculando el path no hacemos nada
+        if (agent.pathPending) return;
+
+        // Si la distancia restante es menor que la distancia de parada
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // Si ya no tiene path o está parado completamente y está de camino a caja, no yendose
+            if (!agent.hasPath && caminoACaja && !irseDeTienda || agent.velocity.sqrMagnitude == 0f && caminoACaja && !irseDeTienda)
+            {
+                // El cliente llegó a la caja
+                LLegadaACaja();
+                
+            }
+
+            /*Si no está de camino a caja y esta de camino a marcharse
+             * el cliente se destruye al marcharse de la tienda
+             */
+            if (!agent.hasPath && irseDeTienda && !caminoACaja || agent.velocity.sqrMagnitude == 0f && irseDeTienda && !caminoACaja)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    //Cuenta atras, el cliente pierde satisfaccion segun pasa el tiempo
+    IEnumerator PerdidaSatis()
+    {
+        //Asignamos interfaz
+        clientSatisText.text = "Satisfacción Cliente: " + clientSatis;
+        //Activamos elemento de interfaz
+        clientSatisText.gameObject.SetActive(true);
+
+        while (clientSatis > 0)
+        {
+
+            yield return new WaitForSeconds(intervalPerd);
+
+            clientSatis--;
+            // evitar negativos
+            clientSatis = Mathf.Clamp(clientSatis, 0, maxSatis);
+            //Actualiza la interfaz
+            clientSatisText.text = "Satisfacción Cliente: " + clientSatis;
+
+        }
+        Debug.Log("Llegó a 0");
+        Marcharse();
+
+    }
+
+    /*
+     * On Click (Placeholder) se añade la satisfacción del cliente a la 
+     * general
+     */
+    private void OnMouseDown()
+    {
+        gameManager.AnadirSatis(clientSatis);
+        //Se desactiva el elemento de interfaz
+        clientSatisText.gameObject.SetActive(false);
+        clientSatis = 10;
+        Destroy(gameObject);
+        //Iniciamos la cuenta atras de nuevo
+        //TO DO: eliminar esto cuando se instancie cada cliente
+        StartCoroutine(PerdidaSatis());
+    }
+
+    // Función pública para enviar el cliente a la caja
+    public void MoverseACaja()
+    {
+        caminoACaja = true;
+        // Setea el destino del pathfinding
+        // El NavMeshAgent calcula automáticamente la ruta
+        agent.SetDestination(cajaTrigger.position);
+    }
+
+    // Función cuando el cliente llega a la caja
+    void LLegadaACaja()
+    {
+        // Evita que se siga llamando cada frame
+        agent.isStopped = true;
+        enCaja = true;
+        caminoACaja = false;
+
+        Debug.Log("Cliente llegó a la caja");
+
+        //Iniciamos la perdida de satisfaccion
+        StartCoroutine(PerdidaSatis());
+    }
+
+    // Función pública para que el cliente se marche de la tienda
+    public void Marcharse()
+    {
+        agent.isStopped = false;
+        enCaja = false;
+        agent.SetDestination(puertaTrigger.position);
+        irseDeTienda = true;
+        Debug.Log("El cliente se macrha");
+    }
+}

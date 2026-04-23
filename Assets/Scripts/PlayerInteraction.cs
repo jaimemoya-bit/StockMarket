@@ -5,31 +5,48 @@ public class PlayerInteraction : MonoBehaviour
 {
     [SerializeField] private Transform holdPoint;
     [SerializeField] private GameObject carriedVisual;
+    [SerializeField] private float interactionRadius = 3f;
 
     private ProductData heldProduct;
     private WarehouseZone nearbyWarehouse;
     private ShelfSlot nearbyShelf;
 
-    // Llamado por el componente PlayerInput (igual que OnMove en PlayerMovement)
+    private void Update()
+    {
+        nearbyWarehouse = null;
+        nearbyShelf = null;
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, interactionRadius);
+        foreach (var col in colliders)
+        {
+            if (col.TryGetComponent(out WarehouseZone wz))
+                nearbyWarehouse = wz;
+            if (col.TryGetComponent(out ShelfSlot ss))
+                nearbyShelf = ss;
+        }
+    }
+
     public void OnFire(InputValue value)
     {
-        Debug.Log("[Interaccion] OnFire llamado, isPressed: " + value.isPressed);
         if (!value.isPressed) return;
         TryInteract();
     }
 
     public void TryInteract()
     {
+        Debug.Log($"[TryInteract] heldProduct: {heldProduct}, nearbyShelf: {nearbyShelf}, nearbyWarehouse: {nearbyWarehouse}");
         if (heldProduct == null)
         {
             if (nearbyWarehouse != null && nearbyWarehouse.HasStock())
             {
                 heldProduct = nearbyWarehouse.TakeProduct();
                 if (carriedVisual != null) carriedVisual.SetActive(true);
+                Debug.Log("[Interaccion] Producto recogido: " + heldProduct.productName);
             }
         }
         else
         {
+            Debug.Log($"[TryInteract] Intentando posar. nearbyShelf: {nearbyShelf}, IsOccupied: {nearbyShelf?.IsOccupied}");
             if (nearbyShelf != null && !nearbyShelf.IsOccupied)
             {
                 nearbyShelf.PlaceProduct(heldProduct);
@@ -37,22 +54,5 @@ public class PlayerInteraction : MonoBehaviour
                 if (carriedVisual != null) carriedVisual.SetActive(false);
             }
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("[Interaccion] Trigger detectado: " + other.gameObject.name);
-        if (other.TryGetComponent(out WarehouseZone warehouse))
-            nearbyWarehouse = warehouse;
-        else if (other.TryGetComponent(out ShelfSlot shelf))
-            nearbyShelf = shelf;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out WarehouseZone _))
-            nearbyWarehouse = null;
-        else if (other.TryGetComponent(out ShelfSlot _))
-            nearbyShelf = null;
     }
 }

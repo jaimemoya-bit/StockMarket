@@ -27,6 +27,19 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
+
+        // Ajustar movimiento relativo a la cámara
+        if (Camera.main != null)
+        {
+            Vector3 camForward = Camera.main.transform.forward;
+            Vector3 camRight = Camera.main.transform.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+            camForward.Normalize();
+            camRight.Normalize();
+            move = camForward * moveInput.y + camRight * moveInput.x;
+        }
+
         controller.Move(move * speed * Time.deltaTime);
 
         if (moveInput.magnitude > 0.1f)

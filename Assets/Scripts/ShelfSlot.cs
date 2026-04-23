@@ -8,7 +8,7 @@ public class ShelfSlot : MonoBehaviour
     private AudioSource audioSource;
     private int currentStock = 0;
 
-    public bool IsOccupied => currentStock >= productVisuals.Length;
+    public bool IsOccupied => productVisuals.Length > 0 && currentStock >= productVisuals.Length;
 
     private void Awake()
     {
