@@ -4,18 +4,34 @@ using UnityEngine;
 
 public class mirarcaja : MonoBehaviour
 {
-    public bool yaGiro;
-       
-    
+   GameObject[] cajas;
+    GameObject cajaMasCercana;
 
-    // Update is called once per frame
     void Update()
     {
-        if (!yaGiro)
-    {
-        transform.Rotate(0, 90, 0);
-        yaGiro = true;
-    }
+        cajas = GameObject.FindGameObjectsWithTag("caja");
+
+        float distanciaMinima = Mathf.Infinity;
+        cajaMasCercana = null;
+
+        foreach (GameObject caja in cajas)
+        {
+            float distancia = Vector3.Distance(transform.position, caja.transform.position);
+
+            if (distancia < distanciaMinima)
+            {
+                distanciaMinima = distancia;
+                cajaMasCercana = caja;
+            }
+        }
+
+        if (cajaMasCercana != null)
+        {
+            Vector3 direccion = cajaMasCercana.transform.position - transform.position;
+            direccion.y = 0; // solo gira en horizontal
+
+            transform.rotation = Quaternion.LookRotation(direccion);
+        }
     }
 
 }
