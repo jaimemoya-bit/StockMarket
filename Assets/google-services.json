@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "240078030437",
+    "project_id": "stockmarket-7ddc3",
+    "storage_bucket": "stockmarket-7ddc3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240078030437:android:709a23111b776bb047e88c",
+        "android_client_info": {
+          "package_name": "com.stockmarketjmoya.game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjYTNDrmaJfnCOqGwsF0hHaTGqTLnm75g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
