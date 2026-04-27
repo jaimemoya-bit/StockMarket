@@ -39,6 +39,12 @@ public class Cliente : MonoBehaviour
     //Se asigna en editor
     [SerializeField] private Transform[] estantTrigger;
 
+    //Variables para declarar los emojis que variaran segun el timer restante del cliente
+
+    public Image iconoSatisfaccion;
+    public Sprite caraFeliz;
+    public Sprite caraSeria;
+    public Sprite caraEnfadada;
 
     //Booleano para saber si está de camino a caja
     private bool caminoACaja;
@@ -114,6 +120,13 @@ public class Cliente : MonoBehaviour
         //Activamos elemento de interfaz
         clientSatisText.gameObject.SetActive(true);
 
+        //Introducimos el primer emoji de satisfacción al llegar cliente a tienda
+        if (iconoSatisfaccion != null)
+        {
+
+            iconoSatisfaccion.sprite = caraFeliz;
+        }
+
         while (clientSatis > 0)
         {
 
@@ -124,6 +137,20 @@ public class Cliente : MonoBehaviour
             clientSatis = Mathf.Clamp(clientSatis, 0, maxSatis);
             //Actualiza la interfaz
             clientSatisText.text = ""+ clientSatis;
+
+            //Contianumos con la lógica de la satisfacción de cliente con emojis segun el timer
+            if (clientSatis <= 0)
+            {
+                iconoSatisfaccion.sprite = caraEnfadada;
+            }
+            else if (clientSatis <= 5)
+            {
+                iconoSatisfaccion.sprite = caraSeria;
+            }
+            else
+            {
+                iconoSatisfaccion.sprite = caraFeliz;
+            }
 
         }
         Debug.Log("Llegó a 0");
