@@ -1,25 +1,16 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Mm]emoryCaptures/
-/[Uu]serSettings/
+# IntelliJ
+.idea/
+*.iml
 
-# Archivos de solución de Visual Studio/Rider
-*.csproj
-*.sln
-*.suo
-*.tmp
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svclog
-*.com.apple.itunes.stored
+# Java
+*.class
+
+# Logs
 *.log
 
-# OS x
+# Maven / Gradle
+target/
+build/
+
+# Mac
 .DS_Store
-DerivedData/
