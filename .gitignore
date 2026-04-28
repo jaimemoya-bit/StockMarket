@@ -22,3 +22,4 @@
 # OS x
 .DS_Store
 DerivedData/
+*.log
