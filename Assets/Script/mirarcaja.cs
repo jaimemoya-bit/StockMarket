@@ -7,7 +7,7 @@ public class mirarcaja : MonoBehaviour
    GameObject[] cajas;
     GameObject cajaMasCercana;
 
-    void Update()
+    void  Start()
     {
         cajas = GameObject.FindGameObjectsWithTag("caja");
 

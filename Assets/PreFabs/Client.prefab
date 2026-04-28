@@ -165,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a339570d984a0344be3cad828f6ccea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yaGiro: 0
 --- !u!1 &8804549663977872957
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +469,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: ad472b939cd48144e9521d873c2e3018, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: fac54571ff27f2b46b28cd6d82cd3c4c, type: 2}
+      objectReference: {fileID: 9100000, guid: 4789934505baece45a0789f2d0ee0d6b, type: 2}
     - target: {fileID: 5866666021909216657, guid: ad472b939cd48144e9521d873c2e3018, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
