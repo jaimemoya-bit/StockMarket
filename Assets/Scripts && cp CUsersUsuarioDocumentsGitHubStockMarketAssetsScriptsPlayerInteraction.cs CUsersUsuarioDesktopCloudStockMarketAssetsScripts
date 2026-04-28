@@ -1,0 +1,35 @@
+using UnityEngine;
+
+public class ShelfSlot : MonoBehaviour
+{
+    [SerializeField] private GameObject productVisual;
+    [SerializeField] private AudioClip restockSound;
+
+    private AudioSource audioSource;
+    private ProductData currentProduct;
+
+    public bool IsOccupied => currentProduct != null;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        UpdateVisual();
+    }
+
+    public bool PlaceProduct(ProductData product)
+    {
+        if (IsOccupied) return false;
+        currentProduct = product;
+        UpdateVisual();
+        if (restockSound != null && audioSource != null)
+            audioSource.PlayOneShot(restockSound);
+        Debug.Log($"[Estanteria] Colocado: {product.productName}");
+        return true;
+    }
+
+    private void UpdateVisual()
+    {
+        if (productVisual != null)
+            productVisual.SetActive(IsOccupied);
+    }
+}
